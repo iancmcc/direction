@@ -25,7 +25,6 @@ class Stub:
         """
         Initialize this stub with a Configuration.
         """
-
     @abstractmethod
     def call(self, transaction):
         """

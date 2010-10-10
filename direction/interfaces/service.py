@@ -8,14 +8,12 @@ class DirectService:
     A service linking an API to a router and providing a remote interface.
     """
     __metaclass__ = ABCMeta
-    _api = None
 
     @abstractproperty
     def api(self):
         """
         Returns a JSON representation of the API presented by this service.
         """
-
     @abstractproperty
     def router(self):
         """
@@ -27,9 +25,6 @@ class DirectAPI:
     Represents an API comprising multiple classes and methods.
     """
     __metaclass__ = ABCMeta
-    _type = ''
-    _url = ''
-    _actions = ()
 
     @abstractproperty
     def type(self):
@@ -38,45 +33,40 @@ class DirectAPI:
 
         This currently always returns "remoting".
         """
-        return self._type
-
     @abstractproperty
     def url(self):
         """
         URL at which the router for this API can be found.
         """
-        return self._url
-
     @abstractproperty
     def actions(self):
         """
         List of L{Configuration} objects representing the available actions
         provided by the router for this API.
         """
-        return self._actions
+    @abstractmethod
+    def add_action(self, action):
+        """
+        Add an action to this API.
+        """
 
 
-class Configuration:
+class DirectAction:
     """
     Defines the API configuration interface.
     """
     __metaclass__ = ABCMeta
-    _name = ''
-    _methods = ()
 
     @abstractproperty
     def name(self):
         """
         Class name to be called.
         """
-        return self._name
-
     @abstractproperty
-    def methods(self):
+    def add_method(self, method):
         """
-        List of Method objects representing available remotable methods.
+        Add a Method object.
         """
-        return self._methods
 
 
 class Method:
@@ -84,25 +74,18 @@ class Method:
     Represents a method that can be remoted.
     """
     __metaclass__ = ABCMeta
-    _name = ''
-    _arguments = None
-
-    def __init__(self):
-        self._arguments = {}
 
     @abstractproperty
     def name(self):
         """
         Represents the method name to be called.
         """
-        return self._name
 
     @abstractproperty
     def arguments(self):
         """
         Dictionary of keyword arguments.
         """
-        return self._arguments
 
 
 class Router:

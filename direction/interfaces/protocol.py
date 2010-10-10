@@ -1,41 +1,40 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
 
 __metaclass__ = type
-__all__ = ['Transaction', 'Request', 'TransactionResult', 'Response']
+__all__ = ['Transaction', 'Request', 'SuccessResult', 'FailureResult',
+           'Response']
 
 class Transaction:
     """
     A transaction representing a single remote method call.
     """
     __metaclass__ = ABCMeta
-    _action = ''
-    _method = ''
-    _data = None
-    _type = ''
-    _tid = 0
-
-    def __init__(self):
-        self._data = {}
 
     @abstractproperty
     def action(self):
-        return self._action
-
+        """
+        Action.
+        """
     @abstractproperty
     def method(self):
-        return self._method
-
+        """
+        Method.
+        """
     @abstractproperty
     def data(self):
-        return self._data
-
+        """
+        Data.
+        """
     @abstractproperty
     def type(self):
-        return self._type
-
+        """
+        Type.
+        """
     @abstractproperty
     def tid(self):
-        return self._tid
+        """
+        Transaction ID.
+        """
 
 
 class Request:
@@ -43,45 +42,66 @@ class Request:
     A set of transactions representing a single request to the service.
     """
     __metaclass__ = ABCMeta
-    _transactions = None
-    def __init__(self):
-        self._transactions = []
 
     @abstractproperty
     def transactions(self):
-        return self._transactions
+        """
+        The set of Transactions that came with this request.
+        """
 
 
-class TransactionResult:
+class Result:
     """
     The result of a single transaction call.
     """
     __metaclass__ = ABCMeta
-    _type = ''
-    _action = ''
-    _method = ''
-    _result = None
-    _tid = 0
 
-    @abstractproperty
     def type(self):
-        return self._type
+        """
+        Type of this result.
+        """
 
+
+class SuccessResult(Result):
+    """
+    A successful result.
+    """
     @abstractproperty
     def action(self):
-        return self._action
-
+        """
+        Action that produced this result.
+        """
     @abstractproperty
     def method(self):
-        return self._method
-
+        """
+        Method that produced this result.
+        """
     @abstractproperty
     def result(self):
-        return self._result
-
+        """
+        Result of the method call.
+        """
     @abstractproperty
     def tid(self):
-        return self._tid
+        """
+        Transaction ID for this result.
+        """
+
+
+class FailureResult(Result):
+    """
+    A failed result.
+    """
+    @abstractproperty
+    def message(self):
+        """
+        Message indicating what went wrong.
+        """
+    @abstractproperty
+    def where(self):
+        """
+        Information about where the error occurred.
+        """
 
 
 class Response:
@@ -89,11 +109,9 @@ class Response:
     A response containing multiple serialized TransactionResults.
     """
     __metaclass__ = ABCMeta
-    _results = None
-
-    def __init__(self):
-        self._resultset= []
 
     @abstractproperty
-    def resultset(self):
-        return self._resultset
+    def results(self):
+        """
+        All the results for this response.
+        """
